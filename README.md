@@ -1,2 +1,2 @@
-# lsycnd_test
-lsycnd の勉強用
+# lsyncd_test
+lsyncd の勉強用
