@@ -8,6 +8,7 @@ dnf install -y lsyncd
 
 # 同期用ディレクトリの作成
 mkdir -p /var/sync_dir/
+chown taro:taro /var/sync_dir
 chmod 755 /var/sync_dir/
 
 # lsyncd設定ファイルの作成
@@ -27,11 +28,13 @@ sync {
     delete="running",
     rsync = {
         archive = true,
-        verbose = true
+        verbose = true,
+        _extra = {"--chmod=D755,F644"}
     },
     delay = 5,
     ssh = {
-        identityFile = "/root/.ssh/id_rsa"
+        identityFile = "/root/.ssh/id_rsa",
+        _extra = {"-l", "taro"}
     }
 }
 
@@ -44,11 +47,13 @@ sync {
     delete="running",
     rsync = {
         archive = true,
-        verbose = true
+        verbose = true,
+        _extra = {"--chmod=D755,F644"}
     },
     delay = 5,
     ssh = {
-        identityFile = "/root/.ssh/id_rsa"
+        identityFile = "/root/.ssh/id_rsa",
+        _extra = {"-l", "taro"}
     }
 }
 EOF

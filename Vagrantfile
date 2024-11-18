@@ -13,18 +13,12 @@ Vagrant.configure("2") do |config|
       vb.cpus = 1
     end
     lsyncd1.vm.provision "shell", inline: <<-SHELL
-      # 必要なパッケージのインストール
-      dnf install -y openssh-server
-
       # ユーザー作成とwheelグループ設定
       for user in taro jiro; do
         useradd -m -s /bin/bash $user
         echo "${user}:${user}" | chpasswd
         usermod -aG wheel $user
       done
-
-      # sudoersの設定
-      sed -i 's/^#\s*\(%wheel\s\+ALL=(ALL)\s\+ALL\)/\1/' /etc/sudoers
 
       # SSHディレクトリの作成と権限設定
       for user in taro jiro; do
@@ -39,6 +33,10 @@ Vagrant.configure("2") do |config|
       # SSHの設定
       sed -i 's/^PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
       systemctl restart sshd
+
+      # SELinuxをpermissiveからdisabledに設定
+      sed -i 's/^SELINUX=permissive/SELINUX=disabled/' /etc/selinux/config
+      shutdown -r now
     SHELL
   end
 
@@ -53,18 +51,12 @@ Vagrant.configure("2") do |config|
       vb.cpus = 1
     end
     lsyncd2.vm.provision "shell", inline: <<-SHELL
-      # 必要なパッケージのインストール
-      dnf install -y openssh-server
-
       # ユーザー作成とwheelグループ設定
       for user in taro jiro; do
         useradd -m -s /bin/bash $user
         echo "${user}:${user}" | chpasswd
         usermod -aG wheel $user
       done
-
-      # sudoersの設定
-      sed -i 's/^#\s*\(%wheel\s\+ALL=(ALL)\s\+ALL\)/\1/' /etc/sudoers
 
       # SSHディレクトリの作成と権限設定
       for user in taro jiro; do
@@ -79,6 +71,10 @@ Vagrant.configure("2") do |config|
       # SSHの設定
       sed -i 's/^PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
       systemctl restart sshd
+
+      # SELinuxをpermissiveからdisabledに設定
+      sed -i 's/^SELINUX=permissive/SELINUX=disabled/' /etc/selinux/config
+      shutdown -r now
     SHELL
   end
 
@@ -93,18 +89,12 @@ Vagrant.configure("2") do |config|
       vb.cpus = 1
     end
     lsyncd3.vm.provision "shell", inline: <<-SHELL
-      # 必要なパッケージのインストール
-      dnf install -y openssh-server
-
       # ユーザー作成とwheelグループ設定
       for user in taro jiro; do
         useradd -m -s /bin/bash $user
         echo "${user}:${user}" | chpasswd
         usermod -aG wheel $user
       done
-
-      # sudoersの設定
-      sed -i 's/^#\s*\(%wheel\s\+ALL=(ALL)\s\+ALL\)/\1/' /etc/sudoers
 
       # SSHディレクトリの作成と権限設定
       for user in taro jiro; do
@@ -119,6 +109,10 @@ Vagrant.configure("2") do |config|
       # SSHの設定
       sed -i 's/^PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
       systemctl restart sshd
+
+      # SELinuxをpermissiveからdisabledに設定
+      sed -i 's/^SELINUX=permissive/SELINUX=disabled/' /etc/selinux/config
+      shutdown -r now
     SHELL
   end
 end
