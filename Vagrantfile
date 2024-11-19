@@ -13,30 +13,55 @@ Vagrant.configure("2") do |config|
       vb.cpus = 1
     end
     lsyncd1.vm.provision "shell", inline: <<-SHELL
-      # ユーザー作成とwheelグループ設定
+      # タイムゾーンをAsia/Tokyoに設定
+      timedatectl set-timezone Asia/Tokyo
+
+      # 基本パッケージのインストール
+      dnf install -y epel-release
+      dnf install -y lsyncd
+      # ユーザー作成
       for user in taro jiro; do
-        useradd -m -s /bin/bash $user
+        useradd -m $user
         echo "${user}:${user}" | chpasswd
-        usermod -aG wheel $user
       done
 
-      # SSHディレクトリの作成と権限設定
+      # 共通のSSHキーを /vagrant/ssh_keys に生成（共有フォルダに保存）
+      mkdir -p /vagrant/ssh_keys
+      if [ ! -f /vagrant/ssh_keys/common_key ]; then
+        ssh-keygen -t rsa -b 4096 -f /vagrant/ssh_keys/common_key -N ''
+      fi
+
+      # 各ユーザーのSSHディレクトリを設定
       for user in taro jiro; do
         user_home="/home/$user"
         mkdir -p ${user_home}/.ssh
         chmod 700 ${user_home}/.ssh
-        touch ${user_home}/.ssh/authorized_keys
+
+        # 共有フォルダから鍵をコピー
+        cp /vagrant/ssh_keys/common_key ${user_home}/.ssh/id_rsa
+        cp /vagrant/ssh_keys/common_key.pub ${user_home}/.ssh/id_rsa.pub
+        cp /vagrant/ssh_keys/common_key.pub ${user_home}/.ssh/authorized_keys
+
+        # 適切な権限を設定
+        chmod 600 ${user_home}/.ssh/id_rsa
+        chmod 644 ${user_home}/.ssh/id_rsa.pub
         chmod 600 ${user_home}/.ssh/authorized_keys
         chown -R ${user}:${user} ${user_home}/.ssh
       done
 
-      # SSHの設定
-      sed -i 's/^PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
-      systemctl restart sshd
+      # 同期ディレクトリの作成
+      mkdir -p /var/sync_dir
+      chown taro:taro /var/sync_dir
+      chmod 755 /var/sync_dir
+      # lsyncd設定ディレクトリの作成
+      mkdir -p /home/taro/.config/lsyncd
+      chown -R taro:taro /home/taro/.config
+
+      mkdir -p /var/log/lsyncd
+      chmod 777 /var/log/lsyncd
 
       # SELinuxをpermissiveからdisabledに設定
       sed -i 's/^SELINUX=permissive/SELINUX=disabled/' /etc/selinux/config
-      shutdown -r now
     SHELL
   end
 
@@ -51,30 +76,50 @@ Vagrant.configure("2") do |config|
       vb.cpus = 1
     end
     lsyncd2.vm.provision "shell", inline: <<-SHELL
-      # ユーザー作成とwheelグループ設定
+      # タイムゾーンをAsia/Tokyoに設定
+      timedatectl set-timezone Asia/Tokyo
+
+      # 基本パッケージのインストール
+      dnf install -y epel-release
+      dnf install -y lsyncd
+      # ユーザー作成
       for user in taro jiro; do
         useradd -m -s /bin/bash $user
         echo "${user}:${user}" | chpasswd
         usermod -aG wheel $user
       done
 
-      # SSHディレクトリの作成と権限設定
+      # 各ユーザーのSSHディレクトリを設定
       for user in taro jiro; do
         user_home="/home/$user"
         mkdir -p ${user_home}/.ssh
         chmod 700 ${user_home}/.ssh
-        touch ${user_home}/.ssh/authorized_keys
+
+        # 共有フォルダから鍵をコピー
+        cp /vagrant/ssh_keys/common_key ${user_home}/.ssh/id_rsa
+        cp /vagrant/ssh_keys/common_key.pub ${user_home}/.ssh/id_rsa.pub
+        cp /vagrant/ssh_keys/common_key.pub ${user_home}/.ssh/authorized_keys
+
+        # 適切な権限を設定
+        chmod 600 ${user_home}/.ssh/id_rsa
+        chmod 644 ${user_home}/.ssh/id_rsa.pub
         chmod 600 ${user_home}/.ssh/authorized_keys
         chown -R ${user}:${user} ${user_home}/.ssh
       done
 
-      # SSHの設定
-      sed -i 's/^PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
-      systemctl restart sshd
+      # 同期ディレクトリの作成
+      mkdir -p /var/sync_dir
+      chown taro:taro /var/sync_dir
+      chmod 755 /var/sync_dir
+      # lsyncd設定ディレクトリの作成
+      mkdir -p /home/taro/.config/lsyncd
+      chown -R taro:taro /home/taro/.config
+
+      mkdir -p /var/log/lsyncd
+      chmod 777 /var/log/lsyncd
 
       # SELinuxをpermissiveからdisabledに設定
       sed -i 's/^SELINUX=permissive/SELINUX=disabled/' /etc/selinux/config
-      shutdown -r now
     SHELL
   end
 
@@ -89,30 +134,50 @@ Vagrant.configure("2") do |config|
       vb.cpus = 1
     end
     lsyncd3.vm.provision "shell", inline: <<-SHELL
-      # ユーザー作成とwheelグループ設定
+      # タイムゾーンをAsia/Tokyoに設定
+      timedatectl set-timezone Asia/Tokyo
+
+      # 基本パッケージのインストール
+      dnf install -y epel-release
+      dnf install -y lsyncd
+      # ユーザー作成
       for user in taro jiro; do
         useradd -m -s /bin/bash $user
         echo "${user}:${user}" | chpasswd
         usermod -aG wheel $user
       done
 
-      # SSHディレクトリの作成と権限設定
+      # 各ユーザーのSSHディレクトリを設定
       for user in taro jiro; do
         user_home="/home/$user"
         mkdir -p ${user_home}/.ssh
         chmod 700 ${user_home}/.ssh
-        touch ${user_home}/.ssh/authorized_keys
+
+        # 共有フォルダから鍵をコピー
+        cp /vagrant/ssh_keys/common_key ${user_home}/.ssh/id_rsa
+        cp /vagrant/ssh_keys/common_key.pub ${user_home}/.ssh/id_rsa.pub
+        cp /vagrant/ssh_keys/common_key.pub ${user_home}/.ssh/authorized_keys
+
+        # 適切な権限を設定
+        chmod 600 ${user_home}/.ssh/id_rsa
+        chmod 644 ${user_home}/.ssh/id_rsa.pub
         chmod 600 ${user_home}/.ssh/authorized_keys
         chown -R ${user}:${user} ${user_home}/.ssh
       done
 
-      # SSHの設定
-      sed -i 's/^PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
-      systemctl restart sshd
+      # 同期ディレクトリの作成
+      mkdir -p /var/sync_dir
+      chown taro:taro /var/sync_dir
+      chmod 755 /var/sync_dir
+      # lsyncd設定ディレクトリの作成
+      mkdir -p /home/taro/.config/lsyncd
+      chown -R taro:taro /home/taro/.config
+
+      mkdir -p /var/log/lsyncd
+      chmod 777 /var/log/lsyncd
 
       # SELinuxをpermissiveからdisabledに設定
       sed -i 's/^SELINUX=permissive/SELINUX=disabled/' /etc/selinux/config
-      shutdown -r now
     SHELL
   end
 end
