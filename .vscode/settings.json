@@ -9,6 +9,7 @@
         "logfile",
         "rsyncssh",
         "targetdir",
+        "timedatectl",
         "usermod"
     ]
 }

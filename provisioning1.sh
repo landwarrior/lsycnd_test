@@ -72,7 +72,7 @@ EOF
 systemctl daemon-reload
 systemctl enable lsyncd
 
-echo "以下のコマンドを実行して、各ターゲットサーバーへ ssh 接続できることを確認してください"
+echo "以下のコマンドを実行して、各ターゲットサーバーへ ssh 接続できることを確認してください(接続後は切断して次の接続を試してください)"
 echo "sudo -u taro ssh -i /home/taro/.ssh/id_rsa taro@192.168.33.22"
 echo "sudo -u taro ssh -i /home/taro/.ssh/id_rsa taro@192.168.33.23"
 echo "上記コマンドで接続確認後、以下のコマンドを実行してください"
